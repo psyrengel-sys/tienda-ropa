@@ -115,27 +115,54 @@
     const cartBadge=document.getElementById("cartBadge");
 
     function addToCart(id){
-      const prod=PRODUCTS.find(p=>p.id===id);
-      const item=state.cart.find(i=>i.id===id);
-      if(item){item.qty+=1        cartItems.innerHTML += `
-          <div class="cart-item">
-            <div class="thumb"><img src="${item.image}" alt="${item.name}"></div>
-            <div style="flex:1">
-              <div>${item.name}</div>
-              <div class="qty">
-                <button onclick="setQty(${item.id},-1)">-</button>
-                <span>${item.qty}</span>
-                <button onclick="setQty(${item.id},1)">+</button>
-              </div>
-              <div class="remove" onclick="removeFromCart(${item.id})">Eliminar</div>
-            </div>
-            <div>${fmtEUR.format(item.price*item.qty)}</div>
-          </div>`;
-      }
-      cartTotal.textContent=fmtEUR.format(total);
-      cartCount.textContent=`${count} artículos`;
-      cartBadge.textContent=`Carrito: ${count}`;
-    }
+  const prod = PRODUCTS.find(p => p.id === id);
+  const item = state.cart.find(i => i.id === id);
+  if(item){
+    item.qty += 1;
+  } else {
+    state.cart.push({...prod, qty:1});
+  }
+  renderCart();
+}
+
+function removeFromCart(id){
+  state.cart = state.cart.filter(i => i.id !== id);
+  renderCart();
+}
+
+function setQty(id, delta){
+  const item = state.cart.find(i => i.id === id);
+  if(!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  renderCart();
+}
+
+function renderCart(){
+  cartItems.innerHTML = "";
+  let total = 0, count = 0;
+  for(const item of state.cart){
+    total += item.price * item.qty;
+    count += item.qty;
+    cartItems.innerHTML += `
+      <div class="cart-item">
+        <div class="thumb"><img src="${item.image}" alt="${item.name}"></div>
+        <div style="flex:1">
+          <div>${item.name}</div>
+          <div class="qty">
+            <button onclick="setQty(${item.id},-1)">-</button>
+            <span>${item.qty}</span>
+            <button onclick="setQty(${item.id},1)">+</button>
+          </div>
+          <div class="remove" onclick="removeFromCart(${item.id})">Eliminar</div>
+        </div>
+        <div>${fmtEUR.format(item.price * item.qty)}</div>
+      </div>`;
+  }
+  cartTotal.textContent = fmtEUR.format(total);
+  cartCount.textContent = `${count} artículos`;
+  cartBadge.textContent = `Carrito: ${count}`;
+}
+
 
     // Eventos
     document.addEventListener("click",e=>{
@@ -160,3 +187,4 @@
   </script>
 </body>
 </html>
+
