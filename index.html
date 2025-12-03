@@ -75,19 +75,43 @@
   </main>
 
   <script>
-    const API_URL = "http://localhost:3000"; // Cambia a tu dominio al desplegar
+  // Lista de productos estáticos
+const PRODUCTS = [
+  {
+    id: 1,
+    name: "Camiseta básica blanca",
+    price: 14.99,
+    category: "camisetas",
+    image: "https://images.unsplash.com/photo-1520975693411-6a1b9b22c5b0?q=80&w=800"
+  },
+  {
+    id: 2,
+    name: "Sudadera con capucha gris",
+    price: 34.95,
+    category: "sudaderas",
+    image: "https://images.unsplash.com/photo-1520974774280-8dcb1b8462c4?q=80&w=800"
+  },
+  {
+    id: 3,
+    name: "Pantalón vaquero slim",
+    price: 39.90,
+    category: "pantalones",
+    image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800"
+  },
+  {
+    id: 4,
+    name: "Zapatillas urbanas",
+    price: 64.90,
+    category: "zapatillas",
+    image: "https://images.unsplash.com/photo-1519741491150-1a5b8e54a37f?q=80&w=800"
+  }
+];
 
-    const fmtEUR = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" });
+// Simula la función fetch
+function fetchProducts(){
+  return Promise.resolve(PRODUCTS);
+}
 
-    let state = { search:"", category:"all", cart:loadCart(), selections:{} };
-
-    function loadCart(){ try{ return JSON.parse(localStorage.getItem("cart"))||[] }catch{ return [] } }
-    function saveCart(){ localStorage.setItem("cart", JSON.stringify(state.cart)); }
-
-    async function fetchProducts(){
-      const res = await fetch(API_URL + "/products");
-      return res.json();
-    }
 
     function filteredProducts(list){
       return list.filter(p=>{
@@ -234,3 +258,4 @@
   </script>
 </body>
 </html>
+
